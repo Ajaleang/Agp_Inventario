@@ -1,0 +1,16 @@
+# Archivos a ignorar — no subir al repositorio
+Audio_Entrevista_Comercial.mp3
+Caso de estudio - Desarrollador_Trainee.pdf
+QWEN.md
+MODELOS.md
+generate_html.py
+analyze_data.py
+test_data.xlsx
+walkthrough.md
+*.webp
+*.png
+__pycache__/
+*.pyc
+.env
+entregable.html
+AGP — Optimizador de Inventario.pdf
