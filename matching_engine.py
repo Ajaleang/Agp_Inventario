@@ -12,27 +12,45 @@ según las reglas de AGP:
 import pandas as pd
 from typing import Tuple
 
+# Columnas mínimas requeridas en el Excel de entrada
+REQUIRED_COLS = [
+    'ID', 'OrderID', 'Serial', 'Vehicle', 'Product',
+    'Invoice', 'Customer', 'DaysStored', 'SetStatus'
+]
+
 
 def emparejar_pedidos(
-    filepath: str
+    df: pd.DataFrame
 ) -> Tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame]:
     """
     Empareja pedidos incompletos que cumplen las 3 reglas de negocio.
 
     Args:
-        filepath: Ruta al archivo Excel con los datos de pedidos
+        df: DataFrame con los datos de pedidos ya cargados desde Excel.
+            Debe contener las columnas: ID, OrderID, Serial, Vehicle,
+            Product, Invoice, Customer, DaysStored, SetStatus.
 
     Returns:
         Tupla con 3 DataFrames:
           - df_pares: Pedidos emparejados listos para completar
           - df_sin_par: Pedidos incompletos que no encontraron par
           - df_datos_problema: Registros con Customer o Vehicle nulos
-    """
-    # Cargar datos del Excel
-    df = pd.read_excel(filepath, engine='openpyxl')
 
+    Raises:
+        ValueError: Si faltan columnas requeridas en el DataFrame.
+    """
     # Normalizar nombres de columnas
+    df = df.copy()
     df.columns = df.columns.str.strip()
+
+    # Validar que todas las columnas requeridas existan
+    missing = [c for c in REQUIRED_COLS if c not in df.columns]
+    if missing:
+        raise ValueError(
+            f"El archivo Excel no contiene las columnas requeridas: "
+            f"{missing}. "
+            f"Columnas encontradas: {list(df.columns)}"
+        )
 
     # Identificar registros con datos faltantes
     df_datos_problema = df[
@@ -187,7 +205,11 @@ def generar_resumen_estadistico(
     total_datos_problema = len(df_datos_problema)
 
     # Calcular inventario liberado
-    if not df_pares.empty:
+    if (
+        not df_pares.empty
+        and 'Total_DaysStored_Promedio' in df_pares.columns
+        and 'Pedido_1_DaysStored' in df_pares.columns
+    ):
         dias_promedio_liberados = df_pares[
             'Total_DaysStored_Promedio'
         ].mean()

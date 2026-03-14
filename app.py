@@ -123,14 +123,22 @@ if uploaded_file is not None:
         )
 
         st.success(
-            f" Archivo cargado: **{uploaded_file.name}** "
+            f"✅ Archivo cargado: **{uploaded_file.name}** "
             + f"({len(st.session_state.df_original)} registros)"
         )
 
-        # Ejecutar el emparejamiento
+        # Preview: muestra las primeras filas para que el usuario confirme
+        with st.expander("🔍 Vista previa del archivo (primeras 5 filas)"):
+            st.dataframe(
+                st.session_state.df_original.head(5),
+                use_container_width=True,
+                hide_index=True
+            )
+
+        # Ejecutar el emparejamiento pasando el DataFrame ya cargado
         with st.spinner("🔄 Procesando pedidos incompletos..."):
             df_pares, df_sin_par, df_datos_problema = emparejar_pedidos(
-                uploaded_file
+                st.session_state.df_original
             )
 
             st.session_state.df_pares = df_pares
@@ -253,7 +261,7 @@ if uploaded_file is not None:
             st.markdown(f"""
                 <div style="background-color: #d4edda; border: 1px solid #c3e6cb;
                     border-radius: 5px; padding: 15px; margin: 10px 0;">
-                    <strong>🎉 Impacto del Emparejamiento:</strong><br>
+                    <strong> Impacto del Emparejamiento:</strong><br>
                     Se completaron
                     <strong>{resumen['pedidos_completados']} pedidos</strong>
                     ({resumen['total_pares_formados']} pares),
@@ -311,6 +319,9 @@ if uploaded_file is not None:
                 col_a, col_b, col_c = st.columns(3)
                 with col_a:
                     st.write(f"**Total pares:** {len(df_pares)}")
+                with col_b:
+                    avg_dias = df_pares['Total_DaysStored_Promedio'].mean()
+                    st.write(f"**Días promedio:** {avg_dias:.0f}")
                 with col_c:
                     max_dias = df_pares['Pedido_1_DaysStored'].max()
                     st.write(f"**Días máximo (1er):** {max_dias:.0f}")
