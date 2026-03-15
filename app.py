@@ -11,7 +11,7 @@ from matching_engine import emparejar_pedidos, generar_resumen_estadistico
 # Configuración de la página
 st.set_page_config(
     page_title="AGP - Emparejamiento de Pedidos",
-    page_icon="📦",
+    page_icon=":package:",
     layout="wide"
 )
 
@@ -76,7 +76,7 @@ st.divider()
 
 # Sidebar con instrucciones
 with st.sidebar:
-    st.header("📋 Instrucciones")
+    st.header("Instrucciones")
     st.markdown("""
     1. **Carga** tu archivo Excel
     2. **Revisa** los KPIs y resultados
@@ -85,9 +85,9 @@ with st.sidebar:
     ---
 
     **Reglas de Emparejamiento:**
-    - ✅ Mismo Customer
-    - ✅ Mismo Vehicle
-    - ✅ Mismo Producto
+    - Mismo Customer
+    - Mismo Vehicle
+    - Mismo Producto
 
     **Prioridad:** Mayor DaysStored primero
     """)
@@ -105,7 +105,7 @@ if 'df_original' not in st.session_state:
     st.session_state.df_original = None
 
 # Carga de archivo
-st.header("1️⃣ Cargar Archivo Excel")
+st.header("1. Cargar Archivo Excel")
 
 uploaded_file = st.file_uploader(
     "Selecciona el archivo .xlsx con los pedidos",
@@ -123,12 +123,12 @@ if uploaded_file is not None:
         )
 
         st.success(
-            f"✅ Archivo cargado: **{uploaded_file.name}** "
+            f"Archivo cargado: **{uploaded_file.name}** "
             + f"({len(st.session_state.df_original)} registros)"
         )
 
         # Preview: muestra las primeras filas para que el usuario confirme
-        with st.expander("🔍 Vista previa del archivo (primeras 5 filas)"):
+        with st.expander("Vista previa del archivo (primeras 5 filas)"):
             st.dataframe(
                 st.session_state.df_original.head(5),
                 use_container_width=True,
@@ -136,7 +136,7 @@ if uploaded_file is not None:
             )
 
         # Ejecutar el emparejamiento pasando el DataFrame ya cargado
-        with st.spinner("🔄 Procesando pedidos incompletos..."):
+        with st.spinner("Procesando pedidos incompletos..."):
             df_pares, df_sin_par, df_datos_problema = emparejar_pedidos(
                 st.session_state.df_original
             )
@@ -154,7 +154,7 @@ if uploaded_file is not None:
         st.divider()
 
         # KPIs en recuadros
-        st.header("2️⃣ Resumen del Procesamiento")
+        st.header("2. Resumen del Procesamiento")
 
         resumen = st.session_state.resumen
 
@@ -164,7 +164,10 @@ if uploaded_file is not None:
         with col1:
             st.markdown(f"""
                 <div class="metric-card">
-                    <div class="metric-label">📊 Pares Formados</div>
+                    <div class="metric-label">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#1f77b4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:4px"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+                        Pares Formados
+                    </div>
                     <div class="metric-value success-text">
                         {resumen['total_pares_formados']}
                     </div>
@@ -177,7 +180,10 @@ if uploaded_file is not None:
         with col2:
             st.markdown(f"""
                 <div class="metric-card">
-                    <div class="metric-label">✅ Pedidos Completados</div>
+                    <div class="metric-label">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#28a745" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:4px"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                        Pedidos Completados
+                    </div>
                     <div class="metric-value success-text">
                         {resumen['pedidos_completados']}
                     </div>
@@ -190,7 +196,10 @@ if uploaded_file is not None:
         with col3:
             st.markdown(f"""
                 <div class="metric-card">
-                    <div class="metric-label">⚠️ Pedidos Sin Par</div>
+                    <div class="metric-label">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fd7e14" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:4px"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                        Pedidos Sin Par
+                    </div>
                     <div class="metric-value">
                         {resumen['pedidos_sin_par']}
                     </div>
@@ -203,7 +212,10 @@ if uploaded_file is not None:
         with col4:
             st.markdown(f"""
                 <div class="metric-card">
-                    <div class="metric-label">❌ Datos con Problemas</div>
+                    <div class="metric-label">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#dc3545" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:4px"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+                        Datos con Problemas
+                    </div>
                     <div class="metric-value warning-text">
                         {resumen['registros_con_datos_faltantes']}
                     </div>
@@ -220,7 +232,10 @@ if uploaded_file is not None:
         with col5:
             st.markdown(f"""
                 <div class="metric-card" style="border-top-color: #28a745;">
-                    <div class="metric-label">📈 Porcentaje Aprovechado</div>
+                    <div class="metric-label">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#28a745" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:4px"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+                        Porcentaje Aprovechado
+                    </div>
                     <div class="metric-value success-text">
                         {resumen['porcentaje_aprovechado']}%
                     </div>
@@ -233,7 +248,10 @@ if uploaded_file is not None:
         with col6:
             st.markdown(f"""
                 <div class="metric-card" style="border-top-color: #17a2b8;">
-                    <div class="metric-label">🕐 Días Promedio Liberado</div>
+                    <div class="metric-label">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#17a2b8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:4px"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                        Días Promedio Liberado
+                    </div>
                     <div class="metric-value" style="color: #17a2b8;">
                         {resumen['dias_promedio_inventario_liberado']}
                     </div>
@@ -246,7 +264,10 @@ if uploaded_file is not None:
         with col7:
             st.markdown(f"""
                 <div class="metric-card" style="border-top-color: #fd7e14;">
-                    <div class="metric-label">🔥 Días Máximo Liberado</div>
+                    <div class="metric-label">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fd7e14" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:4px"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+                        Días Máximo Liberado
+                    </div>
                     <div class="metric-value" style="color: #fd7e14;">
                         {resumen['dias_maximo_inventario_liberado']}
                     </div>
@@ -275,12 +296,12 @@ if uploaded_file is not None:
         st.divider()
 
         # Pestañas de resultados
-        st.header("3️⃣ Resultados Detallados")
+        st.header("3. Resultados Detallados")
 
         tab1, tab2, tab3 = st.tabs([
-            "📦 Pares Formados",
-            "⚠️ Pedidos Sin Par",
-            "❌ Datos con Problemas"
+            "Pares Formados",
+            "Pedidos Sin Par",
+            "Datos con Problemas"
         ])
 
         with tab1:
@@ -315,7 +336,7 @@ if uploaded_file is not None:
                 )
 
                 # Estadísticas adicionales
-                st.markdown("##### 📊 Estadísticas de Pares")
+                st.markdown("##### Estadísticas de Pares")
                 col_a, col_b, col_c = st.columns(3)
                 with col_a:
                     st.write(f"**Total pares:** {len(df_pares)}")
@@ -402,7 +423,7 @@ if uploaded_file is not None:
                 )
 
                 # Resumen de problemas
-                st.markdown("##### 📋 Resumen de Problemas")
+                st.markdown("##### Resumen de Problemas")
                 total_sin_customer = df_datos_problema[
                     df_datos_problema['Customer'].isna() |
                     (df_datos_problema['Customer'].astype(
@@ -427,7 +448,7 @@ if uploaded_file is not None:
         st.divider()
 
         # Exportación
-        st.header("4️⃣ Exportar Resultados")
+        st.header("4. Exportar Resultados")
 
         # Crear archivo Excel con múltiples hojas
         output = io.BytesIO()
@@ -498,7 +519,7 @@ if uploaded_file is not None:
         output.seek(0)
 
         st.download_button(
-            label="📥 Descargar Excel",
+            label="Descargar Excel",
             data=output,
             file_name=(
                 f"AGP_Emparejamiento_"
@@ -523,7 +544,7 @@ if uploaded_file is not None:
         """)
 
     except Exception as e:
-        st.error(f"❌ Error al procesar el archivo: {str(e)}")
+        st.error(f"Error al procesar el archivo: {str(e)}")
         st.markdown("""
         **Posibles causas:**
         - El archivo no tiene el formato esperado
@@ -535,7 +556,7 @@ if uploaded_file is not None:
         """)
 else:
     # Estado inicial
-    st.info("👆 Carga un archivo Excel para comenzar el procesamiento")
+    st.info("Carga un archivo Excel para comenzar el procesamiento")
 
     st.markdown("""
     ### ¿Cómo funciona este sistema?
