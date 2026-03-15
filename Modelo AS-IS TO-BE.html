@@ -227,7 +227,7 @@
             font-size: 0.9rem;
         }
         
-        /* LUCIDE ICONS */
+        
         .problem-card h4 {
             display: flex;
             align-items: center;
@@ -251,7 +251,7 @@
             flex-shrink: 0;
         }
 
-        /* ── PRINT / PDF ─────────────────────────────── */
+        
         .print-btn {
             position: fixed;
             bottom: 2rem;
@@ -280,14 +280,14 @@
                 margin: 15mm 12mm;
             }
 
-            /* Reset de página */
+            
             html, body {
                 background: white !important;
                 -webkit-print-color-adjust: exact !important;
                 print-color-adjust: exact !important;
             }
 
-            /* Contenedor sin sombra, ancho completo */
+            
             .page {
                 max-width: 100% !important;
                 width: 100% !important;
@@ -295,7 +295,7 @@
                 margin: 0 !important;
             }
 
-            /* Header no se parte */
+            
             .header {
                 page-break-inside: avoid;
                 page-break-after: avoid;
@@ -303,13 +303,13 @@
                 print-color-adjust: exact !important;
             }
 
-            /* Cada sección en su página si es posible */
+            
             .section {
                 page-break-inside: avoid;
                 padding: 1.5rem 2rem !important;
             }
 
-            /* Grids fijos para print */
+            
             .stats {
                 grid-template-columns: repeat(4, 1fr) !important;
             }
@@ -320,13 +320,13 @@
                 grid-template-columns: repeat(3, 1fr) !important;
             }
 
-            /* Diagramas no se corten */
+            
             .diagram-container {
                 page-break-inside: avoid;
                 overflow: visible !important;
             }
 
-            /* Tablas no se corten */
+            
             .comparison-table {
                 page-break-inside: avoid;
             }
@@ -334,7 +334,7 @@
                 display: table-header-group;
             }
 
-            /* Colores preservados */
+            
             .problem-card,
             .stat-card,
             .metric-item,
@@ -344,10 +344,10 @@
                 break-inside: avoid;
             }
 
-            /* Ocultar botón */
+            
             .print-btn { display: none !important; }
 
-            /* Footer siempre al final */
+            
             .footer { page-break-before: auto; }
         }
         

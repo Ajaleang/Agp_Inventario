@@ -15,7 +15,6 @@ st.set_page_config(
     layout="wide"
 )
 
-# Estilos CSS personalizados
 st.markdown("""
 <style>
     .metric-card {
@@ -46,7 +45,6 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-# Logo SVG fallback
 svg_logo = """
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 100" width="200">
   <path d="M 15 50 Q 150 5 285 50 Q 150 15 15 50 Z" fill="#8abfcb" />
@@ -55,7 +53,6 @@ svg_logo = """
 </svg>
 """
 
-# Encabezado con logo
 col1, col2 = st.columns([1, 4])
 with col1:
     b64 = base64.b64encode(svg_logo.encode('utf-8')).decode('utf-8')
@@ -74,7 +71,6 @@ with col2:
 
 st.divider()
 
-# Sidebar con instrucciones
 with st.sidebar:
     st.header("Instrucciones")
     st.markdown("""
@@ -92,7 +88,6 @@ with st.sidebar:
     **Prioridad:** Mayor DaysStored primero
     """)
 
-# Estado de sesión
 if 'df_pares' not in st.session_state:
     st.session_state.df_pares = None
 if 'df_sin_par' not in st.session_state:
@@ -104,7 +99,6 @@ if 'resumen' not in st.session_state:
 if 'df_original' not in st.session_state:
     st.session_state.df_original = None
 
-# Carga de archivo
 st.header("1. Cargar Archivo Excel")
 
 uploaded_file = st.file_uploader(
@@ -116,7 +110,6 @@ uploaded_file = st.file_uploader(
 
 if uploaded_file is not None:
     try:
-        # Leer el archivo Excel
         st.session_state.df_original = pd.read_excel(
             uploaded_file,
             engine='openpyxl'
@@ -127,7 +120,6 @@ if uploaded_file is not None:
             + f"({len(st.session_state.df_original)} registros)"
         )
 
-        # Preview: muestra las primeras filas para que el usuario confirme
         with st.expander("Vista previa del archivo (primeras 5 filas)"):
             st.dataframe(
                 st.session_state.df_original.head(5),
@@ -135,7 +127,6 @@ if uploaded_file is not None:
                 hide_index=True
             )
 
-        # Ejecutar el emparejamiento pasando el DataFrame ya cargado
         with st.spinner("Procesando pedidos incompletos..."):
             df_pares, df_sin_par, df_datos_problema = emparejar_pedidos(
                 st.session_state.df_original
@@ -145,7 +136,6 @@ if uploaded_file is not None:
             st.session_state.df_sin_par = df_sin_par
             st.session_state.df_datos_problema = df_datos_problema
 
-            # Generar resumen estadístico
             st.session_state.resumen = generar_resumen_estadistico(
                 df_pares, df_sin_par, df_datos_problema,
                 st.session_state.df_original
@@ -153,12 +143,10 @@ if uploaded_file is not None:
 
         st.divider()
 
-        # KPIs en recuadros
         st.header("2. Resumen del Procesamiento")
 
         resumen = st.session_state.resumen
 
-        # Fila 1 de KPIs (4 columnas)
         col1, col2, col3, col4 = st.columns(4)
 
         with col1:
@@ -225,7 +213,6 @@ if uploaded_file is not None:
                 </div>
             """, unsafe_allow_html=True)
 
-        # Fila 2 de KPIs (3 columnas)
         st.markdown("<div style='height: 20px;'></div>", unsafe_allow_html=True)
         col5, col6, col7 = st.columns(3)
 
@@ -277,7 +264,6 @@ if uploaded_file is not None:
                 </div>
             """, unsafe_allow_html=True)
 
-        # Caja de información destacada
         if resumen['pedidos_completados'] > 0:
             st.markdown(f"""
                 <div style="background-color: #d4edda; border: 1px solid #c3e6cb;
@@ -295,7 +281,6 @@ if uploaded_file is not None:
 
         st.divider()
 
-        # Pestañas de resultados
         st.header("3. Resultados Detallados")
 
         tab1, tab2, tab3 = st.tabs([
@@ -335,7 +320,6 @@ if uploaded_file is not None:
                     height=500
                 )
 
-                # Estadísticas adicionales
                 st.markdown("##### Estadísticas de Pares")
                 col_a, col_b, col_c = st.columns(3)
                 with col_a:
@@ -397,7 +381,6 @@ if uploaded_file is not None:
                     'Producto', 'Días', 'Estado'
                 ]
 
-                # Añadir columna indicando qué falta
                 def indicar_faltante(row):
                     faltantes = []
                     if pd.isna(row['Cliente']) or str(
@@ -422,7 +405,6 @@ if uploaded_file is not None:
                     height=500
                 )
 
-                # Resumen de problemas
                 st.markdown("##### Resumen de Problemas")
                 total_sin_customer = df_datos_problema[
                     df_datos_problema['Customer'].isna() |
@@ -447,10 +429,8 @@ if uploaded_file is not None:
 
         st.divider()
 
-        # Exportación
         st.header("4. Exportar Resultados")
 
-        # Crear archivo Excel con múltiples hojas
         output = io.BytesIO()
         with pd.ExcelWriter(output, engine='openpyxl') as writer:
             if not df_pares.empty:
@@ -555,7 +535,6 @@ if uploaded_file is not None:
         Invoice, InvoiceCost, Customer, DaysStored, SetStatus
         """)
 else:
-    # Estado inicial
     st.info("Carga un archivo Excel para comenzar el procesamiento")
 
     st.markdown("""
@@ -569,7 +548,6 @@ else:
     5. **Exporta** un reporte listo para el almacén
     """)
 
-# Footer
 st.divider()
 st.markdown("""
 <div style="text-align: center; color: #666; font-size: 0.9em;">
